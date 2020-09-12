@@ -1,0 +1,9 @@
+similarity 379
+smoothness 50
+key color 1
+contrast 0.28
+#Crop
+left 100
+top 80
+right 700
+bottom 490

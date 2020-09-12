@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <title>Hello, world!</title>
+    <style>
+        .elementToFadeInAndOut {
+
+            animation: fadeinout 20s linear 1 forwards;
+        }
+
+
+
+        @keyframes fadeinout {
+            0% {
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body style="background-color:green">
+   <div class="container mt-3">
+
+       <div id="esewa" style="display:none;">
+        
+           <img src="./khalti.png"  class="float-left" id="esewa-image" width="189px" height="185px" style="margin-top: -40px;">
+           
+           <div style="margin-top: 100px;color: ivory;">
+            
+            <div id="donators"><b>
+           <h1>Xsphere Torex </h1>
+            <h4>Remarks</h4>
+            <h5>NRS 200</h5></b></div>
+            
+        </div>
+       </div>
+   </div>
+   
+   
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+        <script>
+            function fadeamount(){
+                document.getElementById("esewa-image").style.display="none";
+                document.getElementById("donators").style.display="none";
+                let amount= document.getElementById('amount');
+                amount.setAttribute('class','elementToFadeInAndOut');
+                amount.style.display="";
+
+            }
+            function fadein(){
+                fadeamount();
+                let esewa= document.getElementById('esewa');
+                esewa.setAttribute('class','elementToFadeInAndOut');
+
+                document.getElementById("esewa-image").style.display = "";
+                document.getElementById("donators").style.display="";
+                document.getElementById('amount').style.display = "none";
+                
+            }
+            
+            
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+
+            var socket = io.connect('http://127.0.0.1:5000');
+
+            socket.on('connect', function() {
+                socket.send('User has connected!');
+            });
+
+            socket.on('message', async function(msg) {
+                let par = document.getElementById('esewa');
+                par.classList.add("elementToFadeInAndOut");
+                par.style.display = "";
+                let data = msg;
+                let name = document.getElementById('donators');
+                console.log(name.getElementsByTagName('h1')[0]);
+                name.getElementsByTagName('h1')[0].innerText = data['sender'];
+                name.getElementsByTagName('h4')[0].innerText = data['remarks'];
+                name.getElementsByTagName('h5')[0].innerText = 'NRS     ' + data['amount'];
+                await wait(20000);
+                par.classList.remove("elementToFadeInAndOut");
+                par.style.display = "none";
+                console.log('Received message',msg);
+            });
+
+            $('#sendbutton').on('click', function() {
+                socket.send($('#myMessage').val());
+                $('#myMessage').val('');
+            });
+
+            });
+            function wait(time) {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve();
+        }, time);
+    });
+}
+
+            </script>
+</body>
+
+</html>
